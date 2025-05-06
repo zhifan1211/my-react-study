@@ -2,8 +2,15 @@ import './App.css'
 import React, { useState } from "react";
 
 function Cart() {
-  const [name, setName] = useState("蘋果");
-  const [price, setPrice] = useState("50");
+
+  // 預設商品名稱與價格
+  const products = [
+    {name: "蘋果", price: 50},{name: "香蕉", price: 30},{name: "芒果", price: 60},
+    {name: "葡萄", price: 70},{name: "西瓜", price: 90},{name: "柳丁", price: 80},
+  ];
+
+  const [name, setName] = useState(products[0].name);
+  const [price, setPrice] = useState(products[0].price);
   const [items, setItems] = useState([]);
 
   const handleAdd = () => {
@@ -20,11 +27,28 @@ function Cart() {
     setItems(items.filter((item, i) => i !== index));
   }
 
+  const handleSelectChange = (e) => {
+    const selectedName = e.target.value;
+    const selectedProduct = products.find(p => p.name === selectedName);
+    setName(selectedProduct.name);
+    setPrice(selectedProduct.price);
+  }
+
   const total = items.reduce((sum, item) => sum + item.price, 0);
 
   return (
     <div>
       <h2>簡易購物車</h2>
+      <select onChange={handleSelectChange}>
+        {
+          products.map((p, i) => (
+            <option key={i} value={p.name}>
+              {p.name} ${p.price}
+            </option>
+          ))    
+        }
+      </select>
+      <br />
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}
